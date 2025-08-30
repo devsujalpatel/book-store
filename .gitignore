@@ -2,3 +2,6 @@
 node_modules
 ./node_modules
 .env.local
+
+log.txt
+./log.txt
