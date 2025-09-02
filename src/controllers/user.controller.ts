@@ -119,4 +119,33 @@ export const getProfile = async (req: CustomRequest, res: Response) => {
   return res.status(200).json({ status: "success", data: user });
 };
 
-export const updateUser = async (req: Request, res: Response) => {};
+export const updateUser = async (req: CustomRequest, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return res.status(401).json({ error: "User not authenticated" });
+  }
+
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ error: "Name is required" });
+  }
+
+  try {
+    const [user] = await db
+      .update(usersTable)
+      .set({ name })
+      .where(eq(usersTable.id, userId))
+      .returning({
+        id: usersTable.id,
+        name: usersTable.name,
+        email: usersTable.email,
+      });
+
+    return res.status(200).json({ status: "success", data: user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ err: "Internal server error", error });
+  }
+};
