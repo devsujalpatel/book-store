@@ -7,8 +7,14 @@ import {
   getBooksByAuthorId,
   updateAuthor,
 } from "../controllers/author.controller.ts";
+import {
+  checkLoggedIn,
+  ensureAuthenticated,
+} from "../middlewares/auth.middleware.ts";
 
 const authorRoutes = Router();
+
+authorRoutes.use(checkLoggedIn, ensureAuthenticated);
 
 authorRoutes.post("/", createAuthor);
 

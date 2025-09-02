@@ -6,8 +6,14 @@ import {
   getBookById,
   updateBookById,
 } from "../controllers/book.controller.ts";
+import {
+  checkLoggedIn,
+  ensureAuthenticated,
+} from "../middlewares/auth.middleware.ts";
 
 const bookRoutes = Router();
+
+bookRoutes.use(checkLoggedIn, ensureAuthenticated);
 
 bookRoutes.get("/", getAllBooks);
 
